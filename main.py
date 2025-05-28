@@ -36,5 +36,4 @@ def start(message: types.Message):
 
 
 if __name__ == "__main__":
-    bot.delete_webhook()
     bot.polling(none_stop=True)
