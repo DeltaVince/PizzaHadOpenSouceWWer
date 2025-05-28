@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzaHad</title>
+  <style>
+    body {
+      background-color: rgb(255, 255, 255);
+      font-family: Arial, sans-serif;
+    }
+
+    #main {
+      text-align: center;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      display: inline-block;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 150px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #FFEB99; 
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .join {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #000000;
+      background-color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    .join:hover {
+      background-color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    #selected-ingredients {
+      margin-top: 20px;
+    }
+
+    #ingredient-list li {
+      border: 1px solid #000000;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 2px 0;
+      background-color: #FFEB99;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <h1>Выберите ингредиенты для пиццы</h1>
+
+    <div class="card" id="card_sur">
+      <h2>Сыр</h2>
+      <img src="path/to/cheese.jpg" alt="Сыр" />
+      <p>Топленый сыр для вашей пиццы.</p>
+      <button class="join" id="join_sur">Добавить</button>
+    </div>
+
+    <div class="card" id="card_col">
+      <h2>Колбаса</h2>
+      <img src="path/to/sausage.jpg" alt="Колбаса" />
+      <p>Вкусная колбаса для пиццы.</p>
+      <button class="join" id="join_col">Добавить</button>
+    </div>
+
+    <div class="card" id="card_gri">
+      <h2>Грибы</h2>
+      <img src="path/to/mushrooms.jpg" alt="Грибы" />
+      <p>Свежие грибы для пиццы.</p>
+      <button class="join" id="join_gri">Добавить</button>
+    </div>
+
+    <div class="card" id="card_ana">
+      <h2>Ананасы</h2>
+      <img src="path/to/pineapple.jpg" alt="Ананасы" />
+      <p>Сладкие ананасы для пиццы.</p>
+      <button class="join" id="join_ana">Добавить</button>
+    </div>
+
+    <div class="card" id="card_sal">
+      <h2>Салат</h2>
+      <img src="path/to/salad.jpg" alt="Салат" />
+      <p>Свежий салат для пиццы.</p>
+      <button class="join" id="join_sal">Добавить</button>
+    </div>
+
+    <div class="card" id="card_luk">
+      <h2>Лук</h2>
+      <img src="path/to/onion.jpg" alt="Лук" />
+      <p>Ароматный лук для пиццы.</p>
+      <button class="join" id="join_luk">Добавить</button>
+    </div>
+
+    <div id="selected-ingredients">
+      <h2>Выбранные ингредиенты:</h2>
+      <ul id="calorie-list"></ul>
+      <button id="show-calories">Калории</button>
+      <ul id="ingredient-list"></ul>
+    </div>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    let tg = window.Telegram.WebApp;
+    let selectedIngredients = []; 
+
+    let sur = document.getElementById("join_sur");
+    let sal = document.getElementById("join_sal");
+    let ana = document.getElementById("join_ana");
+    let col = document.getElementById("join_col");
+    let gri = document.getElementById("join_gri");
+    let luk = document.getElementById("join_luk");
+
+    const ingredientCalories = {
+      'Сыр': 300,
+      'Салат': 50,
+      'Ананасы': 80,
+      'Колбаса': 250,
+      'Грибы': 40,
+      'Лук': 30
+    };
+
+    const ingredientBuy = {
+      'Сыр': 99,
+      'Салат': 40,
+      'Ананасы': 199,
+      'Колбаса': 79,
+      'Грибы': 89,
+      'Лук': 43
+    };
+
+    function addIngredient(ingredient) {
+      if (!selectedIngredients.includes(ingredient)) {
+        selectedIngredients.push(ingredient);
+        updateIngredientList();
+      } else {
+        alert(`Ингредиент '${ingredient}' уже добавлен!`);
+      }
+    }
+
+    function updateIngredientList() {
+      const ingredientList = document.getElementById('ingredient-list');
+      ingredientList.innerHTML = ''; 
+      let totalCalories = 0; 
+      let totalBuy = 0;
+      selectedIngredients.forEach(ingredient => {
+        const li = document.createElement('li');
+        const calories = ingredientCalories[ingredient];
+        const buy = ingredientBuy[ingredient];
+        li.textContent = `${ingredient} - ${calories} калорий - ${buy} рублей`;
+        totalCalories += calories;
+        totalBuy += buy;
+        ingredientList.appendChild(li);
+      });
+
+      const totalCaloriesLi = document.createElement('li');
+      totalCaloriesLi.textContent = `Общее количество калорий: ${totalCalories}`;
+      ingredientList.appendChild(totalCaloriesLi);
+
+      const totalBuyLi = document.createElement('li');
+      totalBuyLi.textContent = `Общее количество рублей: ${totalBuy}`;
+      ingredientList.appendChild(totalBuyLi);
+    }
+
+    sur.onclick = () => addIngredient('Сыр');
+    sal.onclick = () => addIngredient('Салат');
+    ana.onclick = () => addIngredient('Ананасы');
+    col.onclick = () => addIngredient('Колбаса');
+    gri.onclick = () => addIngredient('Грибы');
+    luk.onclick = () => addIngredient('Лук');
+  </script>
+</body>
+</html>
+
+
+
+
