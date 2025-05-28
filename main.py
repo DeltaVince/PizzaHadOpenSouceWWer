@@ -23,7 +23,7 @@ def start(message: types.Message):
     web_app_button = types.KeyboardButton(
         "Перейти к Созданию пиццы",
         web_app=types.WebAppInfo(
-            url="https://deltaopensource.github.io/PizzaHadFeature/"  
+            url="https://pizza-had-open-souce-w-wer.vercel.app/"  
         ),
     )
     markup.add(web_app_button)
