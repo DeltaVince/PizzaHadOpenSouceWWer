@@ -30,7 +30,7 @@ async def command_start_handler(message: Message):
     web_app_button = KeyboardButton(
         "Перейти к Созданию пиццы",
         web_app=WebAppInfo(
-            url="https://pizza-had-open-souce-w-wer.vercel.app/"
+            url="https://deltavince.github.io/PizzaHadOpenSouceWWer/"
         ),
     )
     markup.add(web_app_button)
