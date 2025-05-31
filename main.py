@@ -4,45 +4,37 @@ import sys
 from os import getenv
 
 from aiogram import Bot, Dispatcher, html
-from aiogram.filters import CommandStart
-from aiogram.types import Message, InlineKeyboardMarkup, KeyboardButton, WebAppInfo
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.filters import CommandStart, Command
+from aiogram.types import Message, InlineKeyboardMarkup, KeyboardButton, WebAppInfo, InlineKeyboardButton
 
-pizza_component_join = ["7650812272:AAEOtwEnb93SRhuK_JMFJqLqthFqsOXKv-w"]
-feature = 0
-calories = 0
-products = {
-    "лук",
-    "сыр",
-    "колбаса",
-    "салат", 
-    "ананасы",
-    "грибы"
-}
-
-
-TOKEN = getenv("")
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
+TOKEN = '7650812272:AAEOtwEnb93SRhuK_JMFJqLqthFqsOXKv-w'
 
 @dp.message(CommandStart())
-async def command_start_handler(message: Message):
-    markup = InlineKeyboardMarkup()
-    web_app_button = KeyboardButton(
-        "Перейти к Созданию пиццы",
-        web_app=WebAppInfo(
-            url="https://deltavince.github.io/PizzaHadOpenSouceWWer/"
-        ),
-    )
-    markup.add(web_app_button)
+async def command_start_handler(message: Message) -> None:
+    await message.answer(f"Конструктор пицц")
 
-    await message.answer( 
-        "Конструктор Пицц!",
-        reply_markup=markup,
+@dp.message(Command('pizza'))
+async def command_pizza_handler(message: Message) -> None:
+    markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+          [
+              InlineKeyboardButton(
+                  text="go",
+                  web_app=WebAppInfo(url=f'https://deltavince.github.io/PizzaHadOpenSouceWWer/'),
+              )
+          ]  
+        ]  
     )
+    await message.answer(text='Перейти к созданию пиццы', reply_markup=markup)
 
-async def main():
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    await dp.start_polling()
+async def main() -> None:
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())
