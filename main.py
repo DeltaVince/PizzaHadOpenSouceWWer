@@ -1,8 +1,13 @@
-import telebot
-from telebot import types
+import asyncio
+import logging
+import sys
+from os import getenv
 
+from aiogram import Bot, Dispatcher, html
+from aiogram.filters import CommandStart
+from aiogram.types import Message, InlineKeyboardMarkup, KeyboardButton, WebAppInfo
 
-pizza_component_join = []
+pizza_component_join = ["7650812272:AAEOtwEnb93SRhuK_JMFJqLqthFqsOXKv-w"]
 feature = 0
 calories = 0
 products = {
@@ -14,26 +19,30 @@ products = {
     "грибы"
 }
 
-bot = telebot.TeleBot("7650812272:AAEOtwEnb93SRhuK_JMFJqLqthFqsOXKv-w")
 
-@bot.message_handler(commands=["start"])
-def start(message: types.Message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+TOKEN = getenv("")
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 
-    web_app_button = types.KeyboardButton(
+@dp.message(CommandStart())
+async def command_start_handler(message: Message):
+    markup = InlineKeyboardMarkup()
+    web_app_button = KeyboardButton(
         "Перейти к Созданию пиццы",
-        web_app=types.WebAppInfo(
-            url="https://pizza-had-open-souce-w-wer.vercel.app/"  
+        web_app=WebAppInfo(
+            url="https://pizza-had-open-souce-w-wer.vercel.app/"
         ),
     )
     markup.add(web_app_button)
 
-    bot.send_message(
-        message.chat.id,
+    await message.answer( 
         "Конструктор Пицц!",
         reply_markup=markup,
     )
 
+async def main():
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    await dp.start_polling()
 
 if __name__ == "__main__":
-    bot.polling(none_stop=True)
+    asyncio.run(main())
