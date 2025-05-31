@@ -22,7 +22,7 @@ async def command_pizza_handler(message: Message) -> None:
         inline_keyboard=[
           [
               InlineKeyboardButton(
-                  text="go",
+                  text="pizza_constarkt",
                   web_app=WebAppInfo(url=f'https://deltavince.github.io/PizzaHadOpenSouceWWer/'),
               )
           ]  
